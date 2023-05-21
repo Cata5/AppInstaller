@@ -42,7 +42,11 @@ app_names = [
     "CUDA (11.2 dosen't work, 11.3 and higher works)",
     "Intel Driver And Support Assistant",
     "Logitech G-HUB",
-    "Microsoft Office 2021"
+    "Microsoft Office 2021",
+    "Git (have to add)",
+    "MkvToolNIX(have to add)",
+    "Notepad++(have to add)",
+    "Hand Brake(have to add)"
 ]
 winget_apps = [
     "winget install -h -e --id Google.Chrome",
@@ -76,7 +80,7 @@ winget_apps = [
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("dark-blue")
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("900x450")
+app.geometry("1300x450")
 checkboxes = []
 for i, app_name in enumerate(app_names):
     checkbox = customtkinter.CTkCheckBox(master=app, text=f"{app_name}", checkbox_width=15, checkbox_height=15, border_width=1)
