@@ -2,9 +2,22 @@ from  tkinter import *
 import tkinter as tk
 import customtkinter
 import subprocess
+import os
+
 checked = []
+exe_path = os.path.dirname(os.path.abspath(__file__))
+winget_script = None
+oinstall_exe = None
+# Search for .ps1 script in the same directory
+for root, _, files in os.walk(exe_path):
+    if "OInstall.exe" in files:
+        oinstall_exe = os.path.join(root, "OInstall.exe")
+        pass
+    if "winget.ps1" in files:
+        winget_script = os.path.join(root, "winget.ps1")
+        pass
 def install_winget():
-    subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "./winget.ps1"])
+    subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", f"{winget_script}"])
 install_winget()
 app_names = [
     "Chrome",
@@ -57,8 +70,7 @@ winget_apps = [
     "winget install -h -e --id Nvidia.CUDA -v 11.2",
     "winget install -h -e --id Intel.IntelDriverAndSupportAssistant",
     "winget install -h -e --id Logitech.GHUB",
-    "cd ./Apps/Office/ \
-    OInstall.exe",
+    f"{oinstall_exe}",
 ]
 
 customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
