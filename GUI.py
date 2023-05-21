@@ -79,7 +79,7 @@ app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("900x450")
 checkboxes = []
 for i, app_name in enumerate(app_names):
-    checkbox = customtkinter.CTkCheckBox(master=app, text=f"{i+1}.{app_name}", checkbox_width=15, checkbox_height=15, border_width=1)
+    checkbox = customtkinter.CTkCheckBox(master=app, text=f"{app_name}", checkbox_width=15, checkbox_height=15, border_width=1)
     checkbox.grid(row=i % 8, column=i // 8, padx=10, pady=10, sticky="w")
     checkboxes.append(checkbox)
 
