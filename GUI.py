@@ -1,8 +1,8 @@
 from  tkinter import *
-import tkinter
+import tkinter as tk
 import customtkinter
 import subprocess
-
+checked = []
 def install_winget():
     subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "./winget.ps1"])
 install_winget()
@@ -32,38 +32,37 @@ app_names = [
     "Microsoft Office 2021"
 ]
 winget_apps = [
-    "winget install -e --id Google.Chrome",
-    "winget install -e --id Valve.Steam",
-    "winget install -e --id Discord.Discord",
-    "winget install -e --id VideoLAN.VLC",
-    "winget install -e --id Microsoft.VisualStudioCode",
-    "winget install -e --id EpicGames.EpicGamesLauncher",
-    "winget install -e --id Ubisoft.Connect",
-    "winget install -e --id ElectronicArts.EADesktop",
-    "winget install -e --id Python.Python.3.10",
-    "winget install -e --id Asus.ArmouryCrate",
-    "winget install -e --id Guru3D.Afterburner",
-    "winget install -e --id Nvidia.GeForceExperience",
-    "winget install -e --id Microsoft.VCRedist.2015+.x64 \
-    winget install -e --id Microsoft.VCRedist.2010.x64 \
-    winget install -e --id Microsoft.DirectX \
-    winget install -e --id Microsoft.DotNet.Framework.DeveloperPack_4",
-    "winget install -e --id qBittorrent.qBittorrent",
-    "winget install -e --id OpenJS.NodeJS",
-    "winget install -e --id SoftDeluxe.FreeDownloadManager",
-    "winget install -e --id RARLab.WinRAR",
-    "winget install -e --id Unity.UnityHub",
-    "winget install -e --id BlenderFoundation.Blender",
-    "winget install -e --id Nvidia.CUDA -v 11.2",
-    "winget install -e --id Intel.IntelDriverAndSupportAssistant",
-    "winget install -e --id Logitech.GHUB",
+    "winget install -h -e --id Google.Chrome",
+    "winget install -h -e --id Valve.Steam",
+    "winget install -h -e --id Discord.Discord",
+    "winget install -h -e --id VideoLAN.VLC",
+    "winget install -h -e --id Microsoft.VisualStudioCode",
+    "winget install -h -e --id EpicGames.EpicGamesLauncher",
+    "winget install -h -e --id Ubisoft.Connect",
+    "winget install -h -e --id ElectronicArts.EADesktop",
+    "winget install -h -e --id Python.Python.3.10",
+    "winget install -h -e --id Asus.ArmouryCrate",
+    "winget install -h -e --id Guru3D.Afterburner",
+    "winget install -h -e --id Nvidia.GeForceExperience",
+    "winget install -h -e --id Microsoft.VCRedist.2015+.x64 \
+    winget install -h -e --id Microsoft.VCRedist.2010.x64 \
+    winget install -h -e --id Microsoft.DirectX \
+    winget install -h -e --id Microsoft.DotNet.Framework.DeveloperPack_4",
+    "winget install -h -e --id qBittorrent.qBittorrent",
+    "winget install -h -e --id OpenJS.NodeJS",
+    "winget install -h -e --id SoftDeluxe.FreeDownloadManager",
+    "winget install -h -e --id RARLab.WinRAR",
+    "winget install -h -e --id Unity.UnityHub",
+    "winget install -h -e --id BlenderFoundation.Blender",
+    "winget install -h -e --id Nvidia.CUDA -v 11.2",
+    "winget install -h -e --id Intel.IntelDriverAndSupportAssistant",
+    "winget install -h -e --id Logitech.GHUB",
     "cd ./Apps/Office/ \
     OInstall.exe",
 ]
 
-customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
-
+customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
+customtkinter.set_default_color_theme("dark-blue")
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("900x450")
 checkboxes = []
@@ -71,17 +70,28 @@ for i, app_name in enumerate(app_names):
     checkbox = customtkinter.CTkCheckBox(master=app, text=f"{i+1}.{app_name}", checkbox_width=15, checkbox_height=15, border_width=1)
     checkbox.grid(row=i % 8, column=i // 8, padx=10, pady=10, sticky="w")
     checkboxes.append(checkbox)
+
 # def check_checked():
 #     for i, checkbox in enumerate(checkboxes):
-#         if checkbox.get():
+#         if checkbox.get() == 1:
 #             print(f"Checkbox {i+1} is checked.")
+
 def install_apps():
+    check_button.configure(state="disabled")  # Disable the install button
+    for checkbox in checkboxes:
+        checkbox.configure(state="disabled")  # Disable all checkboxes
+
     for i, checkbox in enumerate(checkboxes):
-        if checkbox.is_checked():
+        if checkbox.get() == 1:
             app_name = app_names[i]
             winget_cmd = winget_apps[i]
             print(f"Installing {app_name}...")
             subprocess.run(winget_cmd, shell=True)
+
+    check_button.configure(state="normal")  # Enable the install button
+    for checkbox in checkboxes:
+        checkbox.configure(state="normal")  # Enable all checkboxes
+
 check_button = customtkinter.CTkButton(app, text="Install", command=install_apps,width=150,height=50)
 check_button.grid(row=10, column=0, columnspan=3, pady=10)
 app.mainloop()
