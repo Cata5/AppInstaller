@@ -16,7 +16,7 @@ SETLOCAL DisableDelayedExpansion
 %$Echo% "|_|  |_| \__,_| \__,_| \___| |____/  \__, | |____/ |_| \__,_| \___||_|\_\|____/  \___| \__,_| \__||_| |_|"
 %$Echo% "                                     |___/                                                               "                                                                                                                                                                                                       "
 echo ###################################################################################################
-echo 1.Chrome                               12.GeForce Experience					23.Microsoft Office 2021
+echo 1.Chrome                               12.GeForce Experience				    23.Microsoft Office 2021
 echo 2.Steam                                13.Gaming stuff / Apps (DX,Runtimes,Frameworks)
 echo 3.Discord                              14.qBittorrent
 echo 4.VLC                                  15.NodeJS
