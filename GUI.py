@@ -1,6 +1,7 @@
 from  tkinter import *
 import tkinter as tk
 import customtkinter
+from customtkinter import *
 import subprocess
 import os
 
@@ -77,7 +78,7 @@ winget_apps = [
     f"{oinstall_exe}",
 ]
 
-customtkinter.set_appearance_mode("dark")  # Modes: system (default), light, dark
+  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("dark-blue")
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("1300x450")
@@ -91,6 +92,32 @@ for i, app_name in enumerate(app_names):
 #     for i, checkbox in enumerate(checkboxes):
 #         if checkbox.get() == 1:
 #             print(f"Checkbox {i+1} is checked.")
+settings_frame_visible = False  # Flag to track the visibility of the settings frame
+
+def open_settings():
+    global settings_frame, settings_frame_visible  # Declare settings_frame and settings_frame_visible as global variables
+
+    if settings_frame_visible:
+        settings_frame.destroy()  # Close the settings frame if it's already open
+        settings_frame_visible = False
+    else:
+        settings_frame = Canvas(app, width=200, height=200,bg="#1A1A1A",highlightthickness=0)
+        settings_frame.place(x=700, y=300)
+
+        switch_1 = customtkinter.CTkSwitch(settings_frame, text="Silent installation (installs to default installer location)",fg_color="black",border_width=0)
+        switch_1.grid(row=0, column=0,sticky="w")
+
+        def switch_theme():
+            if theme_switch.get() == 1:
+                customtkinter.set_appearance_mode("light")
+                settings_frame.configure(bg="white")  # Set light theme
+            else:
+                customtkinter.set_appearance_mode("dark")
+                settings_frame.configure(bg="#1A1A1A")  # Set dark theme
+        theme_switch = customtkinter.CTkSwitch(settings_frame, text="Light Theme (not that workinnn)",fg_color="black",border_width=0)
+        theme_switch.grid(row=1,sticky="w", pady=10)
+        theme_switch.configure(command=switch_theme)       
+        settings_frame_visible = True
 
 def install_apps():
     check_button.configure(state="disabled")  # Disable the install button
@@ -110,4 +137,7 @@ def install_apps():
 
 check_button = customtkinter.CTkButton(app, text="Install", command=install_apps,width=150,height=50)
 check_button.grid(row=10, column=0, columnspan=3, pady=10)
+settings_image = PhotoImage(file = "./icons8-settings-16.png")
+settings_button = customtkinter.CTkButton(app,image = settings_image,height=30,width=30,text="",border_width=0,command=open_settings,bg_color="transparent")
+settings_button.grid(row=10,column= 2,columnspan=1,padx=10)
 app.mainloop()
