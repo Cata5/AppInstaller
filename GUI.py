@@ -143,13 +143,14 @@ winget_apps = [
 # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("dark-blue")
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("1300x450")
+app.geometry("1100x550")
+app.resizable(False, False)
 command = None
 checkboxes = []
 for i, app_name in enumerate(app_names):
     checkbox = customtkinter.CTkCheckBox(
         master=app, text=f"{app_name}", checkbox_width=15, checkbox_height=15, border_width=1)
-    checkbox.grid(row=i % 8, column=i // 8, padx=10, pady=10, sticky="w")
+    checkbox.grid(row=i % 10, column=i // 10, padx=40, pady=10, sticky="w")
     checkboxes.append(checkbox)
 
 # def check_checked():
@@ -179,7 +180,7 @@ def open_settings():
     else:
         settings_frame = Canvas(
             app, width=200, height=200, bg="#1A1A1A", highlightthickness=0)
-        settings_frame.place(x=700, y=370)
+        settings_frame.place(x=700, y=450)
 
         silent_install = customtkinter.CTkSwitch(
             settings_frame, text="Silent installation (installs to default installer location)", fg_color="black", border_width=0)
@@ -268,7 +269,7 @@ def write_config():
         print("Updated configuration written to config.json")
 check_button = customtkinter.CTkButton(
     app, text="Install", width=150, height=50)
-check_button.grid(row=10, column=0, columnspan=3, pady=10)
+check_button.grid(row=10, column=0, columnspan=3, pady=20)
 if config["silent_install"] == 1:
     check_button.configure(command=install_apps_silent)
 else:
@@ -285,5 +286,6 @@ config = load_config()
 settings_image = PhotoImage(file="./icons8-settings-16.png")
 settings_button = customtkinter.CTkButton(app, image=settings_image, height=30,
                                           width=30, text="", border_width=0, command=open_settings, bg_color="transparent")
-settings_button.grid(row=10, column=2, columnspan=1, padx=10)
+settings_button.place(x=600,y=470)
+
 app.mainloop()
