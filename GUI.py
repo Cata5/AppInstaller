@@ -50,10 +50,17 @@ app_names = [
     "Intel Driver And Support Assistant",
     "Logitech G-HUB",
     "Microsoft Office 2021",
-    "Git (have to add)",
-    "MkvToolNIX(have to add)",
-    "Notepad++(have to add)",
-    "Hand Brake(have to add)"
+    "Git ",
+    "MkvToolNIX",
+    "Notepad++",
+    "Hand Brake",
+    "Visual Studio Community",
+    "Balena Etcher",
+    "Rufus",
+    "Faceit",
+    "Faceit AC",
+    "TeamViewer",
+    "",
 ]
 winget_apps_silent = [
     "winget install -h -e --id Google.Chrome",
@@ -82,6 +89,16 @@ winget_apps_silent = [
     "winget install -h -e --id Intel.IntelDriverAndSupportAssistant",
     "winget install -h -e --id Logitech.GHUB",
     f"{oinstall_exe}",
+    "winget install -h -e --id Git.Git",
+    "winget install -h -e --id MoritzBunkus.MKVToolNix",
+    "winget install -h -e --id Notepad++.Notepad++",
+    "winget install -h -e --id HandBrake.HandBrake",
+    "winget install -h -e --id Microsoft.VisualStudio.2022.Community.Preview",
+    "winget install -h -e --id Balena.Etcher",
+    "winget install -h -e --id Rufus.Rufus",
+    "winget install -h -e --id FACEITLTD.FACEITClient",
+    "winget install -h -e --id FACEITLTD.FACEITAC",
+    "winget install -h -e --id TeamViewer.TeamViewer",
 ]
 winget_apps = [
     "winget install -e --id Google.Chrome",
@@ -109,7 +126,19 @@ winget_apps = [
     "winget install -e --id Nvidia.CUDA -v 11.2",
     "winget install -e --id Intel.IntelDriverAndSupportAssistant",
     "winget install -e --id Logitech.GHUB",
-    f"{oinstall_exe}"]
+    f"{oinstall_exe}",
+    "winget install -e --id Git.Git",
+    "winget install -e --id MoritzBunkus.MKVToolNix",
+    "winget install -e --id Notepad++.Notepad++",
+    "winget install -e --id HandBrake.HandBrake",
+    "winget install -e --id Microsoft.VisualStudio.2022.Community.Preview",
+    "winget install -e --id Balena.Etcher",
+    "winget install -e --id Rufus.Rufus",
+    "winget install -e --id FACEITLTD.FACEITClient",
+    "winget install -e --id FACEITLTD.FACEITAC",
+    "winget install -e --id TeamViewer.TeamViewer",
+    "",
+    ]
 
 # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("dark-blue")
@@ -150,7 +179,7 @@ def open_settings():
     else:
         settings_frame = Canvas(
             app, width=200, height=200, bg="#1A1A1A", highlightthickness=0)
-        settings_frame.place(x=700, y=300)
+        settings_frame.place(x=700, y=370)
 
         silent_install = customtkinter.CTkSwitch(
             settings_frame, text="Silent installation (installs to default installer location)", fg_color="black", border_width=0)
