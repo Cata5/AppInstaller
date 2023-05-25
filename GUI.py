@@ -5,11 +5,12 @@ from customtkinter import *
 import subprocess
 import os
 import json
-
+from CTkMessagebox import CTkMessagebox
 checked = []
 exe_path = os.path.dirname(os.path.abspath(__file__))
 winget_script = None
 oinstall_exe = None
+activator = None
 # Search for .ps1 script in the same directory
 for root, _, files in os.walk(exe_path):
     if "OInstall.exe" in files:
@@ -18,13 +19,18 @@ for root, _, files in os.walk(exe_path):
     if "winget.ps1" in files:
         winget_script = os.path.join(root, "winget.ps1")
         pass
+    if "activator.bat" in files:
+        activator = os.path.join(root, "activator.bat")
+        pass
 
 
 def install_winget():
     subprocess.run(["powershell.exe", "-ExecutionPolicy",
                    "Bypass", f"{winget_script}"])
-
-
+def finished():
+    CTkMessagebox(title="Warning", message="Installations completed successfully",icon="check")
+def warn():
+    CTkMessagebox(title="Warning", message="Please select atleast one of the following",icon="warning")
 install_winget()
 app_names = [
     "Chrome",
@@ -60,7 +66,7 @@ app_names = [
     "Faceit",
     "Faceit AC",
     "TeamViewer",
-    "",
+    "Windows Actovator",
 ]
 winget_apps_silent = [
     "winget install -h -e --id Google.Chrome",
@@ -99,6 +105,8 @@ winget_apps_silent = [
     "winget install -h -e --id FACEITLTD.FACEITClient",
     "winget install -h -e --id FACEITLTD.FACEITAC",
     "winget install -h -e --id TeamViewer.TeamViewer",
+    f"{activator}",
+
 ]
 winget_apps = [
     "winget install -e --id Google.Chrome",
@@ -137,7 +145,7 @@ winget_apps = [
     "winget install -e --id FACEITLTD.FACEITClient",
     "winget install -e --id FACEITLTD.FACEITAC",
     "winget install -e --id TeamViewer.TeamViewer",
-    "",
+    f"{activator}",
     ]
 
 # Modes: system (default), light, dark
@@ -145,6 +153,7 @@ customtkinter.set_default_color_theme("dark-blue")
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("1100x550")
 app.resizable(False, False)
+app.wm_attributes('-transparentcolor', '#ab23ff')
 command = None
 checkboxes = []
 for i, app_name in enumerate(app_names):
@@ -234,34 +243,44 @@ def install_apps():
     check_button.configure(state="disabled")  # Disable the install button
     for checkbox in checkboxes:
         checkbox.configure(state="disabled")  # Disable all checkboxes
-
+    n=0
     for i, checkbox in enumerate(checkboxes):
         if checkbox.get() == 1:
+            n=1
             app_name = app_names[i]
             winget_cmd = winget_apps[i]
             print(f"Installing {app_name}...")
             subprocess.run(winget_cmd, shell=True)
-
+            checkbox.deselect()
     check_button.configure(state="normal")  # Enable the install button
     for checkbox in checkboxes:
-        checkbox.configure(state="normal")  # Enable all checkboxes
+        checkbox.configure(state="normal")
+    if n ==0:
+            warn()
+    else:finished()  # Enable all checkboxes
 
 
 def install_apps_silent():
     #print("installing apps silently")
-    check_button.configure(state="disabled")  # Disable the install button
-    for checkbox in checkboxes:
-        checkbox.configure(state="disabled")  # Disable all checkboxes
+        check_button.configure(state="disabled")  # Disable the install button
+        for checkbox in checkboxes:
+            checkbox.configure(state="disabled")  # Disable all checkboxes
+        n=0
+        for i, checkbox in enumerate(checkboxes):
+            if checkbox.get() == 1:
+                n=1
+                app_name = app_names[i]
+                winget_cmd = winget_apps_silent[i]
+                print(f"Installing {app_name} silently...")
+                subprocess.run(winget_cmd, shell=True)
+                checkbox.deselect()
+        check_button.configure(state="normal")  # Enable the install button
+        for checkbox in checkboxes:
+            checkbox.configure(state="normal")
+        if n ==0:
+            warn()
+        else:finished()
 
-    for i, checkbox in enumerate(checkboxes):
-        if checkbox.get() == 1:
-            app_name = app_names[i]
-            winget_cmd = winget_apps_silent[i]
-            print(f"Installing {app_name} silently...")
-            subprocess.run(winget_cmd, shell=True)
-    check_button.configure(state="normal")  # Enable the install button
-    for checkbox in checkboxes:
-        checkbox.configure(state="normal")
 
 def write_config():
     with open("config.json", "w") as jsonfile:
@@ -276,16 +295,9 @@ else:
     check_button.configure(command=install_apps)
 config = load_config()
 
-
-
-
-
-
-
-
-settings_image = PhotoImage(file="./icons8-settings-16.png")
-settings_button = customtkinter.CTkButton(app, image=settings_image, height=30,
-                                          width=30, text="", border_width=0, command=open_settings, bg_color="transparent")
-settings_button.place(x=600,y=470)
+settings_image = PhotoImage(file="./icons8-gear-48.png")
+settings_button = customtkinter.CTkButton(app, image=settings_image, height=50,
+                                          width=50, text="", border_width=0, command=open_settings, fg_color="transparent",hover_color="#00FFFFFF")
+settings_button.place(x=570,y=455)
 
 app.mainloop()
