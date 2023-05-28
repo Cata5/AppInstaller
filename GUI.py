@@ -6,6 +6,7 @@ import subprocess
 import os
 import json
 from CTkMessagebox import CTkMessagebox
+import CTkMessagebox
 checked = []
 exe_path = os.path.dirname(os.path.abspath(__file__))
 winget_script = None
@@ -27,10 +28,18 @@ for root, _, files in os.walk(exe_path):
 def install_winget():
     subprocess.run(["powershell.exe", "-ExecutionPolicy",
                    "Bypass", f"{winget_script}"])
+
+
 def finished():
-    CTkMessagebox(title="Warning", message="Installations completed successfully",icon="check")
+    CTkMessagebox(title="Warning",
+                  message="Installations completed successfully", icon="check")
+
+
 def warn():
-    CTkMessagebox(title="Warning", message="Please select atleast one of the following",icon="warning")
+    CTkMessagebox(
+        title="Warning", message="Please select atleast one of the following", icon="warning")
+
+
 install_winget()
 app_names = [
     "Chrome",
@@ -146,7 +155,7 @@ winget_apps = [
     "winget install -e --id FACEITLTD.FACEITAC",
     "winget install -e --id TeamViewer.TeamViewer",
     f"{activator}",
-    ]
+]
 
 # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("dark-blue")
@@ -179,21 +188,54 @@ def load_config():
         return {}
 
 
+def load():
+    print("Config loaded")
+    file_path = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
+    if file_path:
+        with open(file_path, "r") as json_file:
+            loaded_config = json.load(json_file)
+            for i, checkbox in enumerate(checkboxes):
+                app_name = app_names[i]
+                if app_name in loaded_config and loaded_config[app_name] == 1:
+                    checkbox.select()
+                else:
+                    checkbox.deselect()
+
+                # Update the config dictionary with the loaded config
+                config[app_name] = loaded_config.get(app_name, 0)
+config2 = {}
+
+
+def save():
+    print("Config saved")
+    for i, checkbox in enumerate(checkboxes):
+            if checkbox.get() == 1:
+                config2[app_names[i]] = 1
+            else:
+                config2[app_names[i]] = 0
+    write_config_2()
+
+
 def open_settings():
     # Declare settings_frame and settings_frame_visible as global variables
-    global settings_frame, settings_frame_visible, command, config
+    global settings_frame, settings_frame_visible, command, config, load,save
 
     if settings_frame_visible:
         settings_frame.destroy()  # Close the settings frame if it's already open
         settings_frame_visible = False
     else:
         settings_frame = Canvas(
-            app, width=200, height=200, bg="#1A1A1A", highlightthickness=0)
-        settings_frame.place(x=700, y=450)
-
+            app, width=400, height=600, bg="#1A1A1A", highlightthickness=1)
+        settings_frame.place(x=730, y=420)
+        settings_frame.grid_rowconfigure(10, weight=10)
         silent_install = customtkinter.CTkSwitch(
             settings_frame, text="Silent installation (installs to default installer location)", fg_color="black", border_width=0)
         silent_install.grid(row=0, column=0, sticky="w")
+        load = customtkinter.CTkButton(settings_frame, text="Load Config", command=load)
+        load.grid(row=2, column=0, sticky="w", pady=3)
+        save = customtkinter.CTkButton(settings_frame, text="Save Config", command=save)
+        save.grid(row=3, column=0, sticky="w", pady=1)
+        # Adjust column widths
 
         def silent_installer():
             if silent_install.get() == 1:
@@ -238,15 +280,17 @@ def open_settings():
             silent_install.toggle()
         if "theme_switch" in config and config["theme_switch"] != theme_switch.get():
             theme_switch.toggle()
+
+
 def install_apps():
-    #print("Installing normally")
+    # print("Installing normally")
     check_button.configure(state="disabled")  # Disable the install button
     for checkbox in checkboxes:
         checkbox.configure(state="disabled")  # Disable all checkboxes
-    n=0
+    n = 0
     for i, checkbox in enumerate(checkboxes):
         if checkbox.get() == 1:
-            n=1
+            n = 1
             app_name = app_names[i]
             winget_cmd = winget_apps[i]
             print(f"Installing {app_name}...")
@@ -255,20 +299,21 @@ def install_apps():
     check_button.configure(state="normal")  # Enable the install button
     for checkbox in checkboxes:
         checkbox.configure(state="normal")
-    if n ==0:
-            warn()
-    else:finished()  # Enable all checkboxes
+    if n == 0:
+           warn()
+    else:
+        finished()  # Enable all checkboxes
 
 
 def install_apps_silent():
-    #print("installing apps silently")
+    # print("installing apps silently")
         check_button.configure(state="disabled")  # Disable the install button
         for checkbox in checkboxes:
             checkbox.configure(state="disabled")  # Disable all checkboxes
-        n=0
+        n = 0
         for i, checkbox in enumerate(checkboxes):
             if checkbox.get() == 1:
-                n=1
+                n = 1
                 app_name = app_names[i]
                 winget_cmd = winget_apps_silent[i]
                 print(f"Installing {app_name} silently...")
@@ -277,15 +322,24 @@ def install_apps_silent():
         check_button.configure(state="normal")  # Enable the install button
         for checkbox in checkboxes:
             checkbox.configure(state="normal")
-        if n ==0:
+        if n == 0:
             warn()
-        else:finished()
+        else:
+            finished()
+
+
+def write_config_2():
+    file_path = filedialog.asksaveasfilename(defaultextension=".json")
+    with open(file_path, "w") as jsonfile:
+        json.dump(config2, jsonfile)
+        print("Updated configuration written to config.json")
 
 
 def write_config():
     with open("config.json", "w") as jsonfile:
         json.dump(config, jsonfile)
         print("Updated configuration written to config.json")
+
 check_button = customtkinter.CTkButton(
     app, text="Install", width=150, height=50)
 check_button.grid(row=10, column=0, columnspan=3, pady=20)
@@ -297,7 +351,7 @@ config = load_config()
 
 settings_image = PhotoImage(file="./icons8-gear-48.png")
 settings_button = customtkinter.CTkButton(app, image=settings_image, height=50,
-                                          width=50, text="", border_width=0, command=open_settings, fg_color="transparent",hover_color="#00FFFFFF")
-settings_button.place(x=570,y=455)
+                                          width=50, text="", border_width=0, command=open_settings, fg_color="transparent")  # hover_color="#00FFFFFF")
+settings_button.place(x=560, y=455)
 
 app.mainloop()
